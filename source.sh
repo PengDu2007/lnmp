@@ -18,14 +18,13 @@ cronDir=$dir/cron
 wwwDir=$dir/www
 
 # 创建文件夹
-mkdir -p $serverDir
+mkdir -p $shellDir/tools
 mkdir -p $softDir
 mkdir -p $logDir/nginx $logDir/php
 mkdir -p $backupDir/log/nginx $backupDir/log/php $backupDir/code 
 mkdir -p $cronDir
 mkdir -p $wwwDir
-mkdir -p /var/log/nginx
-mkdir -p /var/log/php
+mkdir -p /var/log/nginx /var/log/php
 
 systemctl enable firewalld.service
 
