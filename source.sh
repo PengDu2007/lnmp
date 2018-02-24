@@ -69,11 +69,11 @@ cd nginx-1.12.2
 make && make install
 
 # 配置nginx站点
-if [ -f $shellDir/nginx/nginx.conf ]; then
+if [ -f $currentDir/nginx/nginx.conf ]; then
 	cp  $currentDir/nginx/nginx.conf $softDir/nginx/conf/nginx.conf
 fi
-if [ -d $shellDir/nginx/vhosts ]; then
-	cp -R $currentDir/nginx/vhosts $softDir/nginx/conf/vhosts
+if [ -d $currentDir/nginx/vhosts ]; then
+	cp -R $currentDir/nginx/vhosts $softDir/nginx/conf
 fi
 # 配置nginx服务
 cat > /usr/lib/systemd/system/nginx.service <<EOF
