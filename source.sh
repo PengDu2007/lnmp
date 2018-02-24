@@ -311,6 +311,8 @@ systemctl start php-fpm.service
 
 sleep 5
 
+cd $shellDir/tools
+
 # 配置环境变量
 echo "export PATH=\$PATH:$softDir/php/bin" >> /etc/profile
 bash
