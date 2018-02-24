@@ -5,11 +5,12 @@
 # @version 2018/01/25 14:52:23 
 
 # 设置目录
-dir=/web
+dir=/data
 if [ ! -d $dir ]; then
 	echo "Please create /web directory"
 	exit 1
 fi
+currentDir=`pwd`
 shellDir=$dir/shell
 softDir=$dir/soft
 logDir=$dir/log
@@ -69,10 +70,10 @@ make && make install
 
 # 配置nginx站点
 if [ -f $shellDir/nginx/nginx.conf ]; then
-	cp  $shellDir/nginx/nginx.conf $softDir/nginx/conf/nginx.conf
+	cp  $currentDir/nginx/nginx.conf $softDir/nginx/conf/nginx.conf
 fi
 if [ -d $shellDir/nginx/vhosts ]; then
-	cp -R $shellDir/nginx/vhosts $softDir/nginx/conf/vhosts
+	cp -R $currentDir/nginx/vhosts $softDir/nginx/conf/vhosts
 fi
 # 配置nginx服务
 cat > /usr/lib/systemd/system/nginx.service <<EOF
@@ -115,7 +116,7 @@ systemctl enable nginx.service
 # 启动nginx服务
 systemctl start nginx.service
 
-cp -R $shellDir/nginx/nginx /etc/init.d/nginx
+cp -R $currentDir/nginx/nginx /etc/init.d/nginx
 chmod +x /etc/init.d/nginx
 
 
