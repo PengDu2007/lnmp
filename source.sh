@@ -112,6 +112,9 @@ $logDir/nginx/*.log {
 EOF
 sed -i 's/error_log /data/log/nginx/error.log crit;/error_log "'$dir'"/log/nginx/error.log crit;/g' $softDir/nginx/conf/nginx.conf
 sed -i 's/pid /data/soft/nginx/logs/nginx.pid;/pid "'$dir'"/soft/nginx/logs/nginx.pid;/g' $softDir/nginx/conf/nginx.conf
+
+echo "59 23 * * *  /usr/sbin/logrotate -f /etc/logrotate.d/nginx" >> /var/spool/cron/root 
+
 # 开机启动
 systemctl enable nginx.service
 # 启动nginx服务
@@ -317,9 +320,12 @@ cd $shellDir/tools
 
 # 配置环境变量
 echo "export PATH=\$PATH:$softDir/php/bin" >> /etc/profile
-bash
-source /etc/profile &> /dev/null
-bash
+
+# 开启80端口
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+
+# firewalld.service服务
+firewall-cmd --reload
 
 
 # 输出信息
