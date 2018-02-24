@@ -110,7 +110,8 @@ $logDir/nginx/*.log {
 	endscript
 }
 EOF
-
+sed -i 's/error_log /data/log/nginx/error.log crit;/error_log "'$dir'"/log/nginx/error.log crit;/g' $softDir/nginx/conf/nginx.conf
+sed -i 's/pid /data/soft/nginx/logs/nginx.pid;/pid "'$dir'"/soft/nginx/logs/nginx.pid;/g' $softDir/nginx/conf/nginx.conf
 # 开机启动
 systemctl enable nginx.service
 # 启动nginx服务
