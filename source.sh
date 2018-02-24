@@ -115,7 +115,7 @@ systemctl enable nginx.service
 # 启动nginx服务
 systemctl start nginx.service
 
-cp $shellDir/nginx/nginx /etc/init.d/nginx
+cp -R $shellDir/nginx/nginx /etc/init.d/nginx
 chmod +x /etc/init.d/nginx
 
 
