@@ -7,7 +7,7 @@
 # 设置目录
 dir=/data
 if [ ! -d $dir ]; then
-	echo "Please create /web directory"
+	echo "Please create /data directory"
 	exit 1
 fi
 currentDir=`pwd`
@@ -64,7 +64,8 @@ cd nginx-1.12.2
 --with-http_flv_module \
 --with-http_gzip_static_module \
 --with-http_stub_status_module \
---with-http_v2_module
+--with-http_v2_module \
+--with-http_slice_module
 
 make && make install
 
@@ -79,7 +80,7 @@ fi
 cat > /usr/lib/systemd/system/nginx.service <<EOF
 [Unit]
 Description=nginx
-After=network.target remote-fs.target nss-lookup.target
+After=network.target
 
 [Service]
 Type=forking
@@ -124,7 +125,7 @@ cp -R $currentDir/nginx/nginx /etc/init.d/nginx
 chmod +x /etc/init.d/nginx
 
 
-# 配置nginx目录
+# setting directory for nginx
 chmod 775 $softDir/nginx/logs
 chown -R www:www $softDir/nginx/logs
 chmod -R 775 $wwwDir
@@ -132,8 +133,20 @@ chown -R www:www $wwwDir
 sleep 5
 
 
+
 cd $shellDir/tools
-# 安装php
+# setting curl's nss to ssl
+if [ ! -f curl-7.61.0.tar.gz ]; then
+	wget https://curl.haxx.se/download/curl-7.61.0.tar.gz
+fi
+tar -xzvf curl-7.61.0.tar.gz
+cd curl-7.61.0
+./configure --prefix=/usr/local/curl --without-nss --with-ssl
+make && make install
+
+
+cd $shellDir/tools
+# install php
 if [ ! -f epel-release-latest-7.noarch.rpm ]; then
 	# http://archive.fedoraproject.org/pub/epel/
 	wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -O  $shellDir/tools/epel-release-latest-7.noarch.rpm
@@ -155,7 +168,7 @@ cd php-7.1.13
 --disable-debug \
 --disable-phpdbg \
 --enable-mysqlnd \
---with-curl \
+--with-curl=/usr/local/curl \
 --enable-fpm \
 --with-freetype-dir \
 --with-gd \
@@ -195,7 +208,7 @@ cd php-7.1.13
 
 make && make install
 #
-## 配置php
+## copy php.ini to etc
 cp ./php.ini-development $softDir/php/etc/php.ini
 # 备份配置文件
 cp $softDir/php/etc/php.ini $softDir/php/etc/php.ini.default
@@ -214,7 +227,7 @@ sed -i 's/expose_php = On/expose_php = Off/g' $softDir/php/etc/php.ini
 # redis
 # sed -i 's/session.save_handler = files/session.save_handler = redis/g' $softDir/php/etc/php.ini
 # sed -i 's/;session.save_path = "\/tmp"/session.save_path = "tcp:\/\/192.168.199.191:6379?auth=LJbrRajW9iBq\&database=1"/g' $softDir/php/etc/php.ini
-# opcache
+# setting opcache
 echo -e "\n[Opcache]" >> $softDir/php/etc/php.ini
 echo "zend_extension=opcache.so" >> $softDir/php/etc/php.ini
 echo "opcache.enable=1" >> $softDir/php/etc/php.ini
@@ -235,7 +248,7 @@ sed -i 's,^pm.start_servers = 2,pm.start_servers = 20,g'   $softDir/php/etc/php-
 sed -i 's,;slowlog = log/$pool.log.slow,slowlog = '$softDir'/log/php/\$pool.log.slow,g'   $softDir/php/etc/php-fpm.d/www.conf
 
 install -v -m755 ./sapi/fpm/init.d.php-fpm  /etc/init.d/php-fpm
-# 配置php-fpm服务
+# set php-fpm to service
 cat > /usr/lib/systemd/system/php-fpm.service <<EOF
 [Unit]
 Description=php-fpm
