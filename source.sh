@@ -5,7 +5,7 @@
 # @version 2018/01/25 14:52:23 
 
 # 设置目录
-dir=/data
+dir=/web
 if [ ! -d $dir ]; then
 	echo "Please create /data directory"
 	exit 1
@@ -156,11 +156,11 @@ rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 
 yum -y install autoconf libxml2 libxml2-devel curl-devel libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gmp-devel libicu libicu-devel libmcrypt libmcrypt-devel libxslt-devel
 
-if [ ! -f php-7.1.13.tar.gz ]; then
-	wget http://hk1.php.net/get/php-7.1.13.tar.gz/from/this/mirror -O php-7.1.13.tar.gz
+if [ ! -f php-7.2.12.tar.gz ]; then
+	wget http://cn2.php.net/get/php-7.2.12.tar.gz/from/this/mirror -O php-7.2.12.tar.gz
 fi
-tar -xzvf php-7.1.13.tar.gz
-cd php-7.1.13
+tar -xzvf php-7.2.12.tar.gz
+cd php-7.2.12
 ./configure --prefix=$softDir/php \
 --with-config-file-path=$softDir/php/etc \
 --with-fpm-user=www \
@@ -269,11 +269,11 @@ systemctl enable php-fpm.service
 ##扩展php
 cd $shellDir/tools
 ### 1. redis
-if [ ! -f redis-3.1.6.tgz ]; then
-	wget http://pecl.php.net/get/redis-3.1.6.tgz -O redis-3.1.6.tgz
+if [ ! -f redis-4.1.1.tgz ]; then
+	wget http://pecl.php.net/get/redis-4.1.1.tgz -O redis-4.1.1.tgz
 fi
-tar -xzvf redis-3.1.6.tgz
-cd redis-3.1.6
+tar -xzvf redis-4.1.1.tgz
+cd redis-4.1.1
 $softDir/php/bin/phpize
 ./configure --with-php-config=$softDir/php/bin/php-config
 make && make install
@@ -311,17 +311,17 @@ cd $shellDir/tools
 # --------------------------------------------------------------
 
 # --------------------------------------------------------------
-if [ ! -f memcached-3.0.4.tgz ]; then
-	yum install -y libevent-devel libmemcached-devel
-	wget http://pecl.php.net/get/memcached-3.0.4.tgz -O memcached-3.0.4.tgz
-fi
-tar -xzvf memcached-3.0.4.tgz
-cd memcached-3.0.4
-$softDir/php/bin/phpize
-./configure --with-php-config=$softDir/php/bin/php-config --with-libmemcached-dir
-make && make install
-echo -e "\n[Memcached]" >> $softDir/php/etc/php.ini
-echo "extension=memcached.so" >> $softDir/php/etc/php.ini
+#if [ ! -f memcached-3.0.4.tgz ]; then
+#	yum install -y libevent-devel libmemcached-devel
+#	wget http://pecl.php.net/get/memcached-3.0.4.tgz -O memcached-3.0.4.tgz
+#fi
+#tar -xzvf memcached-3.0.4.tgz
+#cd memcached-3.0.4
+#$softDir/php/bin/phpize
+#./configure --with-php-config=$softDir/php/bin/php-config --with-libmemcached-dir
+#make && make install
+#echo -e "\n[Memcached]" >> $softDir/php/etc/php.ini
+#echo "extension=memcached.so" >> $softDir/php/etc/php.ini
 # --------------------------------------------------------------
 
 # 启动php-fpm服务
