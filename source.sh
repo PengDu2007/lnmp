@@ -111,8 +111,8 @@ $logDir/nginx/*.log {
 	endscript
 }
 EOF
-sed -i 's/error_log /data/log/nginx/error.log crit;/error_log "'$dir'"/log/nginx/error.log crit;/g' $softDir/nginx/conf/nginx.conf
-sed -i 's/pid /data/soft/nginx/logs/nginx.pid;/pid "'$dir'"/soft/nginx/logs/nginx.pid;/g' $softDir/nginx/conf/nginx.conf
+sed -i 's/error_log \/data\/log\/nginx\/error.log crit;/error_log \"'$dir'"\/log\/nginx\/error.log crit;/g' $softDir/nginx/conf/nginx.conf
+sed -i 's/pid \/data\/soft\/nginx\/logs\/nginx.pid;/pid \"'$dir'"\/soft\/nginx\/logs\/nginx.pid;/g' $softDir/nginx/conf/nginx.conf
 
 echo "59 23 * * *  /usr/sbin/logrotate -f /etc/logrotate.d/nginx" >> /var/spool/cron/root 
 
