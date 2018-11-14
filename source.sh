@@ -46,12 +46,12 @@ cd $shellDir/tools
 yum -y install pcre pcre-devel openssl openssl-devel
 
 # 安装nginx
-if [ ! -f nginx-1.12.2.tar.gz ]; then
-	wget http://nginx.org/download/nginx-1.12.2.tar.gz -O nginx-1.12.2.tar.gz
+if [ ! -f nginx-1.15.6.tar.gz ]; then
+	wget http://nginx.org/download/nginx-1.15.6.tar.gz -O nginx-1.15.6.tar.gz
 fi
-tar -xzvf nginx-1.12.2.tar.gz
+tar -xzvf nginx-1.15.6.tar.gz
 
-cd nginx-1.12.2
+cd nginx-1.15.6
 ./configure --prefix=$softDir/nginx \
 --user=www \
 --group=www \
